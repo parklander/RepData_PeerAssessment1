@@ -65,6 +65,7 @@ For each missing value I substituted the mean activity found for that interval a
 ```r
 activity$day <- weekdays(as.Date(activity$date))
 stepsIntDay <- group_by(activity, interval, day) %>% summarize(mean(steps, na.rm=T))
+colnames(stepsIntDay) <- c("interval", "day", "mean")
 ```
 Then I assigned the values from 'activity' to the new 'filled' data frame and filled the empty values with the expected values from the stepsIntDay data frame.
 
@@ -72,5 +73,62 @@ Then I assigned the values from 'activity' to the new 'filled' data frame and fi
 ```r
 filled <- activity
 
-## Are there differences in activity patterns between weekdays and weekends?
+for (i in 1:nrow(filled)) {
+    if (is.na(filled$steps[i])) { 
+        filled$steps[i] = filter(stepsIntDay,day == filled$day[i] & interval == filled$interval[i])$mean}
+}
 ```
+then we can look at the new histogram and mean and median values with all missing values imputed:
+
+
+```r
+steps_filled <- group_by(filled,date) %>% summarize(steps =sum(steps))
+
+hist(steps_filled$steps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
+mean(steps_filled$steps,na.rm=TRUE)
+```
+
+```
+## [1] 10821.21
+```
+
+```r
+median(steps_filled$steps,na.rm=TRUE)
+```
+
+```
+## [1] 11015
+```
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+To determine if there are differences between weekdays and weekends we have to classify the two:
+
+
+```r
+for(i in 1:nrow(filled)) { 
+    if (filled$day[i] %in% c("Saturday","Sunday")) { 
+        filled$week[i] <- "weekend"} 
+    else {filled$week[i] <- "weekday"}
+}
+
+intervals <- group_by(filled,interval,week) %>% 
+    summarize(sum = sum(steps,na.rm=T),mean = mean(steps,na.rm=T))
+```
+
+and then plot the values:
+
+```r
+library(lattice)
+
+with(intervals, xyplot(mean~interval|week))
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+
+Here we see there definitely are differences. There is more consistent activity throughout the day on the weekend and looks like a lot of sitting during the day during weekdays.

@@ -91,4 +91,4 @@ with(intervals, xyplot(mean~interval|week))
 
 ```
 
-Here we see there definitely are 
+Here we see there definitely are differences. There is more consistent activity throughout the day on the weekend and looks like a lot of sitting during the day during weekdays.
