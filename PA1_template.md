@@ -131,4 +131,4 @@ with(intervals, xyplot(mean~interval|week))
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
-Here we see differences between weekend and weekday activity. There is more consistent activity throughout the day on the weekend and looks like a lot of sitting during the day during weekdays.
+There are differences between weekend and weekday activity. On the weekend activity is more consistent throughout the day as compared to weekdays. It looks as though there is a rush to get to work or perhaps a burst of activity at the gym in the morning of weekdays and less activity at work for the majority of the workday.
